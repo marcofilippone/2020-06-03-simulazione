@@ -5,8 +5,10 @@
 package it.polito.tdp.PremierLeague;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.PremierLeague.model.Arco;
 import it.polito.tdp.PremierLeague.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,6 +19,7 @@ import javafx.scene.control.TextField;
 public class FXMLController {
 	
 	private Model model;
+	private boolean creato = false;
 
     @FXML // ResourceBundle that was given to the FXMLLoader
     private ResourceBundle resources;
@@ -44,7 +47,17 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
-
+    	String txt = txtGoals.getText();
+    	Double x;
+    	try {
+    		x = Double.parseDouble(txt);
+    	} catch(NumberFormatException e) {
+    		txtResult.setText("Inserire un numero decimale con il punto");
+    		return;
+    	}
+    	model.creaGrafo(x);
+    	creato = true;
+    	txtResult.setText("Grafo creato:\n"+model.getVertexes().size()+" vertici e "+model.getEdges().size()+" archi");
     }
 
     @FXML
@@ -54,7 +67,17 @@ public class FXMLController {
 
     @FXML
     void doTopPlayer(ActionEvent event) {
-
+    	if(!creato) {
+    		txtResult.setText("Devi prima creare il grafo");
+    		return;
+    	}
+    	List<Arco> lista = model.battuti();
+    	txtResult.setText("BEST PLAYER: "+lista.get(0).getP1()+"\n\nAVVERSARI BATTUTI:\n");
+    	if(lista.size()>0) {
+    		for(Arco a : lista) {
+        		txtResult.appendText(a.getP2()+" | "+a.getPeso()+"\n");
+        	}
+    	}
     }
 
     @FXML // This method is called by the FXMLLoader when initialization is complete
