@@ -10,6 +10,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.PremierLeague.model.Arco;
 import it.polito.tdp.PremierLeague.model.Model;
+import it.polito.tdp.PremierLeague.model.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -62,7 +63,28 @@ public class FXMLController {
 
     @FXML
     void doDreamTeam(ActionEvent event) {
-
+    	if(!creato) {
+    		txtResult.setText("Devi prima creare il grafo");
+    		return;
+    	}
+    	String txt = txtK.getText();
+    	Integer k;
+    	try {
+    		k = Integer.parseInt(txt);
+    	} catch(NumberFormatException e) {
+    		txtResult.setText("Inserire un numero intero k");
+    		return;
+    	}
+    	List<Player> team = model.dreamTeam(k);
+    	if(team.size()<5) {
+    		txtResult.setText("Dream team non trovato");
+    	} else {
+    		txtResult.setText("Dream team trovato:\n\n");
+    		for(Player p : team) {
+    			txtResult.appendText(p+"\n");
+    		}
+    		txtResult.appendText("\nGrado totale: "+model.getGradoTot());
+    	}
     }
 
     @FXML
